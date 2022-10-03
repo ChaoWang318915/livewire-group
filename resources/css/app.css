@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@font-face {
+    font-family: 'dm-sans-bold';
+    src : url('/font/DMSans-Bold.ttf') format('truetype');;
+}
+
+@font-face {
+    font-family: 'dm-sans-semibold';
+    src : url('/font/DMSans-Medium.ttf') format('truetype');;
+}
+
+@font-face {
+    font-family: 'dm-sans-regular';
+    src : url('/font/DMSans-Regular.ttf') format('truetype');;
+}
+
+@font-face {
+    font-family: 'dm-sans';
+    src : url('/font/DMSerifDisplay-Regular.ttf') format('truetype');;
+}
+
+
+@layer components {
+
+    body {
+        @apply font-['dm-sans-regular'] text-default;
+    }
+
+    h1, h2 {
+        @apply font-['dm-sans'];
+    }
+
+    h3 {
+        @apply font-['dm-sans-bold'];
+    }
+
+    h4, h5, h6 {
+        @apply font-['dm-sans-semibold'];
+    }
+
+    [x-cloak] { display: none !important; }
+
+    .error {
+        @apply text-xs text-danger;
+    }
+
+    .page-wrapper {
+      @apply min-h-[100vh] w-full overflow-hidden;
+    }
+
+    .main-nav .nav-link {
+        @apply text-white;
+    }
+
+    .main-nav .nav-link-wrapper {
+        @apply space-x-7;
+    }
+
+    .main-mobile-nav .nav-link {
+        @apply block px-2 py-2 hover:bg-light;
+    }
+
+    .main-mobile-nav .active.nav-link {
+        @apply bg-light;
+    }
+
+    .container {
+         @apply lg:w-[1200px] md:w-[960px] px-5 mx-auto;
+    }
+
+    .logo {
+        @apply h-[30px] w-auto;
+    }
+
+    .logo-lg {
+        @apply h-[40px] w-auto;
+    }
+
+    .main-nav .nav-auth-btn {
+        @apply rounded border border-white px-3 py-1;
+    }
+
+    .btn {
+        @apply text-center rounded-lg text-white whitespace-nowrap text-center;
+    }
+
+    .btn-sq {
+        @apply rounded-none;
+    }
+
+    .btn-block {
+        @apply w-full block;
+    }
+
+    .btn-xl {
+        @apply py-4 px-5 text-sm;
+    }
+
+    .btn-lg {
+        @apply py-2 px-5 text-sm;
+    }
+
+    .form-control {
+        @apply w-full placeholder-gray-400 px-3 rounded-lg text-dark focus:outline-0 transition tracking-wider text-sm bg-white;
+    }
+
+    .form-control-lg {
+        @apply py-2 px-3;
+    }
+
+    .form-control-xl {
+        @apply py-4;
+    }
+
+    .main-footer .footer-link {
+        @apply text-secondary hover:text-primary transition;
+    }
+
+    .main-footer .socials a {
+        @apply h-10 w-10 border inline-block md:text-2xl flex items-center justify-center rounded-full hover:bg-primary hover:border-primary text-white;
+    }
+
+}
