@@ -20,7 +20,7 @@ class Hero extends Component
 
             if($validator->fails()) return toast()->danger($validator->errors()->first())->push();
 
-            if(!$authRepo->sendNewPassword($this->email)) return toast()->danger('An error occured, please try again')->push();
+            if(!$authRepo->sendSignedUrl($this->email)) return toast()->danger('An error occured, please try again')->push();
 
             $this->reset();
 

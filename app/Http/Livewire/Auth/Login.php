@@ -18,24 +18,19 @@ class Login extends Component
 
 
     public function mount(AuthRepository $authRepo){
-        
-        try {
-            
-            if(request()->has(['token', 'email', 'password'])) {
 
-                if(!$authRepo->login(request()->all())) return throw new \Exception("Error Processing Request", 1);
+        if(request()->hasValidSignature()){
 
-                toast()->success('Login Successful')->pushOnNextPage();
+            if(!$authRepo->login(request('id'))) 
+                return toast()->danger('Invalid Login Credentials')->pushOnNextPage();
 
-                return redirect()->route('user.dashboard');
+            toast()->success('Login Successful')->pushOnNextPage();
 
-            }
+            return redirect()->route('user.dashboard');
 
-
-        } catch (\Exception $e) {
-            
-            toast()->danger('Invalid Login Credentials')->pushOnNextPage();
-
+        }else{
+            if(request()->has(['id', 'email', 'expires', 'signature']))
+                return toast()->danger('Signed In Url has expired')->pushOnNextPage();
         }
 
     }
@@ -46,7 +41,7 @@ class Login extends Component
 
             $this->validate([ 'email' => "required" ]);
 
-            if(!$authRepo->sendNewPassword($this->email)) return toast()->danger('An error occured, please try again')->push();
+            if(!$authRepo->sendSignedUrl($this->email)) return toast()->danger('An error occured, please try again')->push();
 
             $this->reset();
 

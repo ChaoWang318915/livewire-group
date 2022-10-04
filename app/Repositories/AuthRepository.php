@@ -4,42 +4,49 @@ namespace App\Repositories;
 
 use App\Models\User;
 use Mail;
-use App\Mail\UpdatePassword;
+use App\Mail\SendSignedUrlMail;
 use Str;
+use URL;
 use DB;
 
 
 class AuthRepository
 {
     
-    public function sendNewPassword($email){
+    public function getSignedUrl($user){
 
-            $newPassword = Str::random(5);
-            $token = Str::random(10);
-
-            try {
-                if($user = User::firstOrCreate(["email" => $email], ["email" => $email, 'name' => $token, 'password' => bcrypt($newPassword)])){
-                    $user->update([ 'password' => bcrypt($newPassword), 'token' => $token ]);
-                    Mail::to($email)->send(new UpdatePassword($newPassword, $email, $token));
-
-                    return true;
-                }
-
-            } catch (\Exception $e) {
-                
-                return false;
-
-            }
+        return URL::temporarySignedRoute('login', now()->addMinutes(5), ['email' => $user->email, "id" => $user->id]);
 
     }
 
-    public function login($data){
 
-        if(!User::where('email', $data['email'])->where(DB::raw("BINARY token"), $data['token'])->first()) return false;
+    public function sendSignedUrl($email){
         
-        if(!$user = auth()->attempt(['email' => $data['email'], 'password' => $data['password']])) return $user;
+            try {  
+
+                DB::beginTransaction();
+            
+                if($user = User::firstOrCreate(["email" => $email], ["email" => $email, 'name' => Str::random(20)])){
+                    Mail::to($email)->send(new SendSignedUrlMail($this->getSignedUrl($user)));
+                    DB::commit();
+                    return $user;
+                }
+
+                throw new \Exception("Error Processing Request", 1);
+
+            } catch (\Exception $e) {
+                
+                DB::rollback();
+
+                return false;
+            }      
+
+    }
+
+    public function login($id){
+
+        return auth()->loginUsingId($id);
         
-        return auth()->user()->update(['token' => null]); //Render token Invalid after login
     }
 
 }
